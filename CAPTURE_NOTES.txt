@@ -1,0 +1,10 @@
+Before = live navy https://youth-sports-app-navy.vercel.app/auth/login , 2026-08-28,
+         Chrome 1440x900 (desktop) and 390x844 (phone).
+After  = the REAL app. The proposed change was applied to the local working tree,
+         rendered by `npm run dev` on :3010, captured at the same viewports, then
+         reverted (`git checkout -- src/app/auth/AuthForm.tsx`; the scratch route
+         directory deleted). Nothing committed, nothing pushed.
+         The scratch form had NO action wired and the success state was driven by
+         ?sent=1, so resetPasswordForEmail was never called and no mail was sent.
+Card measurements are getBoundingClientRect() readings, not estimates.
+Shots quantised to 256 colours for delivery size.

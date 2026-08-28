@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YSP · Forgot password · Look sheet</title>
+<style>
+  :root{--canvas:#f6f7f9;--panel:#fff;--line:#e6e8ee;--ink:#12141a;--mute:#5c6470;--act:#2563eb;--act-soft:#eef3fe;--ok:#0f7a52;--ok-soft:#e8f6f0;--warn:#8a5a00;--warn-soft:#fdf4e3;--r-card:14px;--sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--canvas);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .page{max-width:1100px;margin:0 auto;padding:56px 28px 100px}
+  .kicker{font-size:11px;font-weight:700;letter-spacing:.15em;color:var(--mute);text-transform:uppercase}
+  h1{margin-top:10px;font-size:32px;font-weight:650;letter-spacing:-.04em}
+  .stand{margin-top:10px;font-size:16px;color:var(--mute);max-width:64ch}
+  .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;margin-top:26px}
+  .facts>div{background:var(--panel);padding:14px 16px}
+  .facts dt{font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--mute);text-transform:uppercase}
+  .facts dd{margin-top:5px;font-size:14px}
+  section{margin-top:48px}
+  h2{font-size:12px;font-weight:700;letter-spacing:.13em;color:var(--mute);text-transform:uppercase;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  p{font-size:15.5px;margin-top:14px;max-width:68ch}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:20px}
+  .trio{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+  .solo{max-width:660px;margin-top:20px}
+  .phonepair{max-width:640px}
+  @media (max-width:820px){.pair,.facts{grid-template-columns:1fr}.trio{grid-template-columns:1fr 1fr}}
+  figure{margin:0} figure img{display:block;width:100%;height:auto;background:var(--panel);border:1px solid var(--line);border-radius:11px}
+  figcaption{margin-top:9px;font-size:13px;color:var(--mute)}
+  figcaption b{display:block;color:var(--ink);font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:var(--act-soft);color:var(--act)}
+  ul{margin:14px 0 0 18px;font-size:15px;max-width:68ch} li+li{margin-top:6px} a{color:var(--act)}
+  table{border-collapse:collapse;width:100%;margin-top:18px;font-size:14px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+  th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);background:#fbfbfd}
+  tr:last-child td{border-bottom:0}
+  .good{color:var(--ok);font-weight:650}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;background:#eef0f4;padding:1px 5px;border-radius:4px}
+  .note{margin-top:20px;border:1px solid #e8dcc0;background:var(--warn-soft);border-radius:var(--r-card);padding:14px 16px}
+  .note p{margin-top:0;font-size:14.5px;max-width:none}
+  .note p+p{margin-top:9px}
+  .note b{color:var(--warn)}
+</style>
+</head>
+<body>
+<div class="page">
+  <p class="kicker">Youth Sports · Miami Hoops · Look only</p>
+  <h1>Forgot password on Sign in</h1>
+  <p class="stand">A parent who forgets their password currently has no way back in — there is no control on the sign-in form and no page behind one. This adds both, in the auth chrome that already exists. Nothing is merged and nothing is on navy.</p>
+
+  <div class="facts">
+    <div><dt>Before</dt><dd>Live navy, today</dd></div>
+    <div><dt>New screens</dt><dd>1 page + 1 link</dd></div>
+    <div><dt>Sign up</dt><dd>Not touched</dd></div>
+    <div><dt>State</dt><dd><span class="badge">Look only</span></dd></div>
+  </div>
+
+  <section>
+    <h2>Where things actually stand — checked in the code, not assumed</h2>
+    <table>
+      <tr><th>Claim</th><th>Verified against</th></tr>
+      <tr><td>Sign-in form has no <i>Forgot password</i></td><td><code>src/app/auth/AuthForm.tsx</code> — email, password, submit, Sign up link. Nothing else.</td></tr>
+      <tr><td>No <code>/auth/forgot-password</code> route</td><td><code>src/app/auth/</code> holds only <code>login</code>, <code>signup</code>, <code>callback</code>, <code>set-password</code>.</td></tr>
+      <tr><td class="good">Recovery already works once the email lands</td><td><code>callback.ts:62</code> keys off <code>type=recovery</code>; <code>callback.test.ts</code> asserts recovery verifies straight to <code>/auth/set-password</code>.</td></tr>
+      <tr><td class="good">The redirect helper already exists</td><td><code>siteUrl.ts:11</code> — <code>authCallbackUrl("recovery")</code> returns the navy origin + <code>?type=recovery</code>, and is covered by a test.</td></tr>
+      <tr><td>Nothing sends the mail yet</td><td><code>resetPasswordForEmail</code> has <b>zero call sites</b> in <code>src/</code>. That one call is the whole build.</td></tr>
+    </table>
+    <p>So this is a small piece of work: the back half of the flow is built and tested. What is missing is the front door.</p>
+  </section>
+
+  <section>
+    <h2>Fix 1 · The control on Sign in</h2>
+    <p>Placed on the password label row, right-aligned — the pattern on Squarespace, Dropbox, GitHub and Stripe, and the one place a parent looks when the password is the thing that failed. It uses the same brand link treatment as the existing <i>Sign up</i> link, so nothing new enters the design.</p>
+    <p><b>It costs no height.</b> Measured in the browser at 1440px: the card is <b>416 × 282px before and 416 × 282px after</b>, and the Sign in button stays at y=406. The label and the link sit on a shared baseline (0px apart). Nothing below it moves.</p>
+    <div class="pair">
+      <figure><a href="shots/before-login-card.png" target="_blank" rel="noopener"><img src="shots/before-login-card.png" alt="Before — sign-in card with no forgot password control"></a>
+        <figcaption><b>Before · no way back</b> Live navy · tap to enlarge</figcaption></figure>
+      <figure><a href="shots/after-login-card.png" target="_blank" rel="noopener"><img src="shots/after-login-card.png" alt="After — sign-in card with Forgot password on the label row"></a>
+        <figcaption><b>After · one link, same card</b> Same 416 × 282px · tap to enlarge</figcaption></figure>
+    </div>
+    <p>Considered and not chosen: putting it under the Sign in button next to “Don’t have an account?”. It reads as an afterthought there, and it competes with Sign up for the same line.</p>
+  </section>
+
+  <section>
+    <h2>Fix 2 · The reset page</h2>
+    <p>Same chrome as <i>Welcome back</i> — heading, one line of help, the same Card, the same input and full-width brand button. Title, one line, one field, one action, one way back. No hero, no illustration, no second CTA.</p>
+    <div class="pair">
+      <figure><a href="shots/after-forgot-desktop.png" target="_blank" rel="noopener"><img src="shots/after-forgot-desktop.png" alt="After — reset your password page, desktop"></a>
+        <figcaption><b>After · reset page</b> Desktop 1440px · tap to enlarge</figcaption></figure>
+      <figure><a href="shots/after-forgot-sent-desktop.png" target="_blank" rel="noopener"><img src="shots/after-forgot-sent-desktop.png" alt="After — success state, neutral notice"></a>
+        <figcaption><b>After · after submit</b> One line, one action · tap to enlarge</figcaption></figure>
+    </div>
+    <p>The success line is deliberately neutral: <i>“If that email is on file, we’ve sent a link to reset your password.”</i> It never confirms whether an address has an account, so the form cannot be used to find out which parents are registered. Dropbox words it the same way, for the same reason. It reuses the notice styling <code>AuthForm</code> already renders for <code>state.notice</code>, so it is not a new component.</p>
+  </section>
+
+  <section>
+    <h2>Phone</h2>
+    <div class="trio">
+      <figure><a href="shots/before-login-phone.png" target="_blank" rel="noopener"><img src="shots/before-login-phone.png" alt="Before — sign in on a phone"></a>
+        <figcaption><b>Before · sign in</b> 390px</figcaption></figure>
+      <figure><a href="shots/after-login-phone.png" target="_blank" rel="noopener"><img src="shots/after-login-phone.png" alt="After — sign in on a phone with the control"></a>
+        <figcaption><b>After · sign in</b> Control fits the row</figcaption></figure>
+      <figure><a href="shots/after-forgot-phone.png" target="_blank" rel="noopener"><img src="shots/after-forgot-phone.png" alt="After — reset page on a phone"></a>
+        <figcaption><b>After · reset page</b> 390px</figcaption></figure>
+      <figure><a href="shots/after-forgot-sent-phone.png" target="_blank" rel="noopener"><img src="shots/after-forgot-sent-phone.png" alt="After — success state on a phone"></a>
+        <figcaption><b>After · after submit</b> 390px</figcaption></figure>
+    </div>
+    <p>The label row is a flex row, so on a narrow screen the link stays on the label’s line rather than wrapping under it. Checked at 390px.</p>
+    <figure class="solo"><a href="shots/after-forgot-light.png" target="_blank" rel="noopener"><img src="shots/after-forgot-light.png" alt="After — reset page in the light theme"></a>
+      <figcaption><b>After · light theme</b> The new page and the notice hold under the theme toggle with no extra work · tap to enlarge</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>One thing to check before the build</h2>
+    <div class="note">
+      <p><b>Who actually sends the mail.</b> This flow would go out on Supabase Auth’s own recovery email — <code>resetPasswordForEmail</code> — not the app’s email module, which is built but wired to nothing. That is the right call for a password reset, and it is the only send permitted here.</p>
+      <p>Worth confirming the project’s Auth SMTP settings before the build, though: Supabase’s built-in sender is rate-limited and intended for development. If it has not been pointed at a real sender, resets would go out slowly or not at all — and the neutral success message means a parent would never know. <b>This is a question to answer, not something observed broken.</b></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>How these shots were made</h2>
+    <p>The After screens are the real application, not a drawing — the proposed change was applied locally, rendered by the dev server, photographed at 1440px and 390px, and then reverted. Nothing was committed, no branch was pushed, and <code>resetPasswordForEmail</code> was never called: the mock form has no action wired to it at all and the success state is driven by a query parameter. No email reached anybody.</p>
+  </section>
+
+  <section>
+    <h2>References</h2>
+    <div class="pair">
+      <figure><a href="refs/refero-squarespace-forgot.jpg" target="_blank" rel="noopener"><img src="refs/refero-squarespace-forgot.jpg" alt="Squarespace forgot password"></a>
+        <figcaption><b>Squarespace</b> Title, one line, one field, one button, one way back.</figcaption></figure>
+      <figure><a href="refs/refero-dropbox-forgot.jpg" target="_blank" rel="noopener"><img src="refs/refero-dropbox-forgot.jpg" alt="Dropbox forgot password"></a>
+        <figcaption><b>Dropbox</b> The non-revealing confirmation, worded the way ours is.</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>One thing to settle</h2>
+    <p>Look-yes or look-no via Prometheus. On a yes this is one new route, one link in <code>AuthForm</code>, and one <code>resetPasswordForEmail</code> call pointed at the <code>authCallbackUrl("recovery")</code> helper that already exists. No migration, no new dependency, no change to Sign up. Nothing merges or deploys until Paul says.</p>
+  </section>
+</div>
+</body>
+</html>
