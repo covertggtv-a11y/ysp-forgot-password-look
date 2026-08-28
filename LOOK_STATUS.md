@@ -38,18 +38,21 @@ and meant for development, and because the success message is deliberately neutr
 never learn their reset had not arrived. **A question to answer, not something observed broken.**
 
 ## Hosting
-**BLOCKED — sheet + zip ready.** `gh repo create` is refused by the harness permission classifier
-in this session (same block hit on the home-symmetry look). The package is complete and committed
-locally; publishing it is one command.
+**Repo created and pushed. Pages not yet switched on — that one API call is blocked.**
 
-Intended URL: **https://covertggtv-a11y.github.io/ysp-forgot-password-look/**
+- Repo: https://github.com/covertggtv-a11y/ysp-forgot-password-look (public, `main`, content pushed)
+- Intended URL: **https://covertggtv-a11y.github.io/ysp-forgot-password-look/** — currently 404,
+  because GitHub Pages has never been enabled on the repo (`GET .../pages` returns 404).
 
-To publish, run from an approved shell:
+`gh repo create` went through this time; `gh api -X POST .../pages` is refused by the harness
+permission classifier. One command from an approved shell finishes it:
 
-    cd /workspace/ysp-forgot-password-look
-    gh repo create ysp-forgot-password-look --public --source=. --remote=lookorigin --push
     gh api -X POST repos/covertggtv-a11y/ysp-forgot-password-look/pages \
       -f 'source[branch]=main' -f 'source[path]=/'
 
-⚠️ The earlier `ysp-home-symmetry-look` repo was blocked the same way and, as far as this session
-can tell, was never created either — that hosted URL is cited in PR #12 and may not resolve.
+Or in the browser: repo → Settings → Pages → Source `main` / `/ (root)` → Save. Either way the URL
+above goes live within a minute or two; nothing else needs changing.
+
+✅ Separately confirmed this session: the earlier **`ysp-home-symmetry-look`** repo now exists, its
+Pages site is built, and https://covertggtv-a11y.github.io/ysp-home-symmetry-look/ returns 200 — so
+the link cited in PR #12 does resolve. That flag is cleared.
